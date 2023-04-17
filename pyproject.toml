@@ -60,6 +60,9 @@ dependencies = [
   "black>=23.1.0",
   "mypy>=1.0.0",
   "ruff>=0.0.243",
+  "polars>=0.17",
+  "typer>=0.7",
+  "numpy>=1.24",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/tobii_munger tests}"
@@ -85,6 +88,7 @@ skip-string-normalization = true
 [tool.ruff]
 target-version = "py310"
 line-length = 120
+ignore-init-module-imports = true
 select = [
   "A",
   "ARG",
@@ -155,3 +159,6 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.mypy]
+plugins = "numpy.typing.mypy_plugin"

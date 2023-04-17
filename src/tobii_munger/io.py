@@ -23,7 +23,12 @@ def read_unified(path: PathLike, datatype: str | None = None) -> pl.DataFrame:
         pl.DataFrame
             A Polars DataFrame containing the Tobii data from the unified parquet file.
     """
-    data = pl.scan_ds(path)
+    data = pl.scan_parquet(path)
     if datatype is not None:
         data = data.filter(pl.col("type") == datatype)
-    return data.with_columns(pl.col("vals").arr.to_struct(name_generator=_name_generator)).unnest("vals").collect()
+    data = data.with_columns(
+        pl.col("vals").arr.to_struct(n_field_strategy="max_width", name_generator=_name_generator)
+    ).unnest("vals")
+    if datatype is not None:
+        data = data.drop("type")
+    return data.collect()

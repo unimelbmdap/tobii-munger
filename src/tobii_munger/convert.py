@@ -9,7 +9,9 @@ import typer
 
 
 def main(data_dir: Path, out_path: Path):
-    assert out_path.suffix == ".parquet"
+    if out_path.suffix != ".parquet":
+        _err = "Output path must have a .parquet suffix"
+        raise typer.BadParameter(_err)
 
     typer.echo(f"Processing {data_dir.name}")
 
@@ -41,7 +43,9 @@ def main(data_dir: Path, out_path: Path):
                 ],
                 stdout=PIPE,
             )
-            assert _jq1.stdout
+            if not _jq1.stdout:
+                _err = "Failed to open stdout"
+                raise RuntimeError(_err)
             _jq2 = Popen(["jq", "-s"], stdin=_jq1.stdout, stdout=fout)
             _jq1.stdout.close()
             _jq2.communicate()
@@ -64,7 +68,9 @@ def main(data_dir: Path, out_path: Path):
                 ],
                 stdout=PIPE,
             )
-            assert _jq1.stdout
+            if not _jq1.stdout:
+                _err = "Failed to open stdout"
+                raise RuntimeError(_err)
             _jq2 = Popen(["jq", "-s"], stdin=_jq1.stdout, stdout=fout)
             _jq1.stdout.close()
             _jq2.communicate()
