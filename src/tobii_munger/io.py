@@ -1,4 +1,4 @@
-from os import PathLike
+from pathlib import Path
 
 import polars as pl
 
@@ -10,7 +10,7 @@ def _name_generator(ii: int) -> str:
     return "xyz"[ii]
 
 
-def read_unified(path: PathLike, datatype: str | None = None) -> pl.DataFrame:
+def read_unified(path: Path | str, datatype: str | None = None) -> pl.DataFrame:
     """Read Tobii data from a unified parquet file.
 
     Arguments:
